@@ -28,14 +28,7 @@ public class CreateCourierTest {
                 "anitkabanditkakorn",
                 "anitkabanditkakorn"
         );
-        given()
-                .header("Content-type", "application/json")
-                .body(dataCourier)
-                .when()
-                .post("/api/v1/courier")
-                .then()
-                .statusCode(201)
-                .body("ok", is(true));
+        createCourier(dataCourier);
     }
 
     @After
@@ -69,6 +62,12 @@ public class CreateCourierTest {
                 "anitkabanditkakorn",
                 "anitkabanditkakorn"
         );
+        createCourier(dataCourier);
+        createCourierDuplicate(dataCourier);
+    }
+
+    @Step("Успешное создание курьера")
+    private static void createCourier(DataCourier dataCourier) {
         given()
                 .header("Content-type", "application/json")
                 .body(dataCourier)
@@ -77,6 +76,10 @@ public class CreateCourierTest {
                 .then()
                 .statusCode(201)
                 .body("ok", is(true));
+    }
+
+    @Step("Ошибка при попытке создать дубликат")
+    private static void createCourierDuplicate(DataCourier dataCourier) {
         given()
                 .header("Content-type", "application/json")
                 .body(dataCourier)
