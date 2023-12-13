@@ -1,5 +1,6 @@
 package courier;
 
+import courier.model.Order;
 import io.qameta.allure.Step;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -17,12 +18,12 @@ import static org.hamcrest.core.Is.is;
 
 @RunWith(Parameterized.class)
 public class CreateOrderTest {
-    private final Order order;
+    private final List<String> color;
 
     private final Matcher<Integer> expected;
 
-    public CreateOrderTest(Order order, Matcher<Integer> expected) {
-        this.order = order;
+    public CreateOrderTest(List<String> color, Matcher<Integer> expected) {
+        this.color = color;
         this.expected = expected;
     }
 
@@ -34,6 +35,18 @@ public class CreateOrderTest {
     @Test
     @Step("Создание заказа")
     public void testCreateOrder() {
+        Order order = new Order(
+                "Иван",
+                "Иванов",
+                "Москва.15",
+                "м.Пушкина",
+                "+79668854201",
+                12,
+                "2023-12-11",
+                "позвонить заранее",
+                color
+        );
+
         given()
                 .header("Content-type", "application/json")
                 .body(order)
@@ -44,39 +57,15 @@ public class CreateOrderTest {
                 .body("track", is(expected));
     }
 
-    @Parameterized.Parameters //
+    @Parameterized.Parameters
     public static Object[][] getOrder() {
         return new Object[][]{
-                {new Order("Иван", "Иванов", "Москва.15", "м.Пушкина", "+79668854201", 12, "2023-12-11", "позвонить заранее", List.of("BLACK")), new TrackNumberMatcher()},
-                {new Order("Иван", "Иванов", "Москва.15", "м.Пушкина", "+79668854201", 12, "2023-12-11", "позвонить заранее", List.of("GREY")), new TrackNumberMatcher()},
-                {new Order("Иван", "Иванов", "Москва.15", "м.Пушкина", "+79668854201", 12, "2023-12-11", "позвонить заранее", List.of()), new TrackNumberMatcher()},
-                {new Order("Иван", "Иванов", "Москва.15", "м.Пушкина", "+79668854201", 12, "2023-12-11", "позвонить заранее", null), new TrackNumberMatcher()},
-                {new Order("Иван", "Иванов", "Москва.15", "м.Пушкина", "+79668854201", 12, "2023-12-11", "позвонить заранее", List.of("BLACK", "GREY")), new TrackNumberMatcher()},
+                {List.of("BLACK"), new TrackNumberMatcher()},
+                {List.of("GREY"), new TrackNumberMatcher()},
+                {List.of(), new TrackNumberMatcher()},
+                {null, new TrackNumberMatcher()},
+                {List.of("BLACK", "GREY"), new TrackNumberMatcher()},
         };
-    }
-
-    public static class Order {
-        public final String firstName;
-        public final String lastName;
-        public final String address;
-        public final String metroStation;
-        public final String phone;
-        public final int rentTime;
-        public final String deliveryDate;
-        public final String comment;
-        public final List<String> color;
-
-        public Order(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment, List<String> color) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.address = address;
-            this.metroStation = metroStation;
-            this.phone = phone;
-            this.rentTime = rentTime;
-            this.deliveryDate = deliveryDate;
-            this.comment = comment;
-            this.color = color;
-        }
     }
 
     private static class TrackNumberMatcher extends TypeSafeMatcher<Integer> {

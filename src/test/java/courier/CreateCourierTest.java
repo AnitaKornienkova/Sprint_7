@@ -1,5 +1,7 @@
 package courier;
 
+import courier.model.AuthorizationCredentials;
+import courier.model.DataCourier;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import org.junit.After;
@@ -9,24 +11,10 @@ import org.junit.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 
-
 public class CreateCourierTest {
     @Before
     public void setUp() {
         RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
-    }
-
-    public static class DataCourier {
-        public final String login;
-        public final String password;
-        public final String firstName;
-
-        public DataCourier(String login, String password, String firstName) {
-            this.login = login;
-            this.password = password;
-            this.firstName = firstName;
-        }
-
     }
 
     //    курьера можно создать;
@@ -52,7 +40,7 @@ public class CreateCourierTest {
 
     @After
     public void deleteCreateNewCourier() {
-        AuthorizeCourierTest.AuthorizationCredentials authorizationCredentials = new AuthorizeCourierTest.AuthorizationCredentials(
+        AuthorizationCredentials authorizationCredentials = new AuthorizationCredentials(
                 "anitkabanditkakorn1",
                 "anitkabanditkakorn"
         );

@@ -1,5 +1,6 @@
 package courier;
 
+import courier.model.AuthorizationCredentials;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import org.junit.Before;
@@ -12,16 +13,6 @@ public class AuthorizeCourierTest {
     @Before
     public void setUp() {
         RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
-    }
-
-    public static class AuthorizationCredentials {
-        public final String login;
-        public final String password;
-
-        public AuthorizationCredentials(String login, String password) {
-            this.login = login;
-            this.password = password;
-        }
     }
 
     //курьер может авторизоваться;
